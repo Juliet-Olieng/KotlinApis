@@ -7,17 +7,16 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class UserViewModel: ViewModel() {
-    var registrationLiveData = MutableLiveData<RegistrationResponse>()
-    var regError = MutableLiveData<String>()
-    val userRepository = UserRepository()
-    fun registerUser(registrationRequest: RegistrationRequest){
+    val apiClient=ApiClient.buildClient(ApiInterface::class.java)
+    var _userList:MutableLiveData<List<UserData>> = MutableLiveData()
+    val userList:LiveData<List<UserData>> =_userList
+
+    fun fetchUser(){
         viewModelScope.launch {
-            val response = userRepository.registerUser(registrationRequest)
+            val response=apiClient.getUsers()
             if (response.isSuccessful){
-                registrationLiveData.postValue(response.body())
-            }
-            else{
-                regError.postValue(response.errorBody()?.string())
+                val users = response.body()?.users?: emptyList<>()
+                _userList.value=users
             }
         }
     }
