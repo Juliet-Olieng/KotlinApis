@@ -3,13 +3,15 @@ package com.julietolieng.fetchingapis
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
+import retrofit2.http.Body
 
 class UserRepository {
-    val apiInterface = ApiClient.buildClient(ApiInterface::class.java)
-    suspend fun registerUser(registrationRequest: RegisterRequest):
-            Response<RegisterResponse> =
-        withContext(Dispatchers.IO) {
-            var resp = apiInterface.registerStudent(registrationRequest)
-            return@withContext resp
-        }
+    private val apiInterface = ApiClient.buildClient(ApiInterface::class.java)
+    suspend fun registerUser(): Response<List<UserData>> {
+       return withContext(Dispatchers.IO){
+           apiInterface.registerUser()
+       }
+    }
+
+
 }

@@ -3,35 +3,35 @@ package com.julietolieng.fetchingapis
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.julietolieng.fetchingapis.databinding.ActivityMainBinding
 import com.julietolieng.fetchingapis.databinding.UserListBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var userRVAdapter: UserRVAdapter
     private val viewModel by viewModels<UserViewModel>()
-    private var userList:List<UserData> = emptyList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel.fetchUser()
-        initializeList()
+
 
     }
-    @SuppressLint("NotifyDataSetChanged")
-    fun initializeList(){
-        viewModel.userList.observe(this){
-          users -> users?.let {
-              userList=it
-            userRVAdapter= UserRVAdapter(userList,this)
-            binding.rvUsers.layoutManager=GridLayoutManager(this@MainActivity,2)
-            binding.rvUsers.adapter=userRVAdapter
-            userRVAdapter.notifyDataSetChanged()
-        }
-        }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.errLiveData.observe(this, Observer {
+            str ->Toast.makeText(baseContext,str,Toast.LENGTH_LONG).show()
+        })
+        viewModel.registrationLiveData.observe(this, Observer {
+            response ->Toast.makeText(baseContext,"users successful",Toast.LENGTH_LONG).show()
+        })
     }
+
 }
 
 
