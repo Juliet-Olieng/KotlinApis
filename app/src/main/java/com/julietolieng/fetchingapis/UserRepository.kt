@@ -12,6 +12,4 @@ class UserRepository {
            apiInterface.registerUser()
        }
     }
-
-
 }

@@ -9,12 +9,11 @@ import retrofit2.http.POST
 
 
 interface ApiInterface {
-    @GET("user")
+    @GET("/posts")
     suspend fun registerUser(): Response<List<UserData>>
-    companion object{
-        var apiInterface:ApiInterface?=null
-    }
-
+//    companion object{
+//        var apiInterface:ApiInterface?=null
+//    }
 }
 
 
